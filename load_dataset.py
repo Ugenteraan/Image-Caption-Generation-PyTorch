@@ -32,6 +32,8 @@ class VizWiz(Dataset):
         self.images = self.annotation_file['images']
         self.annotations = self.annotation_file['annotations']
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+        self.bertmodel = BertModel.from_pretrained('bert-base-uncased', output_hidden_states=True)
+        self.bertmodel.eval()
 
 
         return None
@@ -54,7 +56,51 @@ class VizWiz(Dataset):
 
         tokenized_caption = self.tokenizer.tokenize(f"[CLS] {caption} [SEP]") #the markings around the caption is necessary for BERT.
 
-        print(caption, tokenized_caption)
+        indexed_tokens = self.tokenizer.convert_tokens_to_ids(tokenized_caption)
+
+
+        segment_ids = [1] * len(tokenized_caption)
+        tokens_tensor = torch.tensor([indexed_tokens])
+        segments_tensor = torch.tensor([segment_ids])
+
+        with torch.no_grad():
+
+            outputs = self.bertmodel(tokens_tensor, segments_tensor)
+
+            #the hidden states would be a tuple with 13 elements in it where each one has 3 dimensions [batch number, num of tokens, hidden unit size].
+            hidden_states = outputs[2]
+
+            token_embeddings = torch.stack(hidden_states, dim=0) #stack the elements in the tuple. Should be [13, 1, x, 768]
+            token_embeddings = torch.squeeze(token_embeddings, dim=1) #we don't need the batch dimension.
+            token_embeddings = token_embeddings.permute(1,0,2) #swap the layers dimension and the num of tokens dimension. [x, 13, 768]
+
+            #There is no a single answer on which layer we should pick the word embedding from to get the best representation of the word. The BERT authors ran some trial and error and decided that the concatenation from the last 4 hidden layers produced the best F1 score. There has been other experiments that showed otherwise. E.g. https://github.com/hanxiao/bert-as-service concluded that the sweet spot is the second-to-last layer. In this experiment, we'll go with the concatenation of the last 4 layers.
+
+            token_vecs_last_four_concat = [] #would be [x, 3072]
+
+            for token in token_embeddings:
+                #token is a [13 x 768] torch tensor. 13 denotes the layers. The first layer is the input embedding and it can be ignored. The other 12 layers are the output from BERT. Since we're only interested in the last 4 layers, we didn't really need that information in the first place.
+                vecs = torch.cat((token[-1], token[-2], token[-3], token[-4]), dim=0)
+                token_vecs_last_four_concat.append(vecs)
+            
+
+
+
+
+
+
+            print("hidden states")
+            print(len(hidden_states))
+            print(len(token_vecs_last_four_concat), len(token_vecs_last_four_concat[0]))
+            # print(token_embeddings)
+            print("hidden states end")
+
+
+
+
+
+
+
 
 
 
