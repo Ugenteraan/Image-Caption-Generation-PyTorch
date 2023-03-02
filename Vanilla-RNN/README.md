@@ -46,7 +46,7 @@ In order to find the derivatives of the loss with respect to the weights and bia
  - $W_{yh}$ and $b_y$ does not depend on $h_t$. Therefore we can find the derivative of the loss with respect to $W_{yh}$ and $b_y$ at each time-step separately and sum the derivatives.
  - $W_{hh}, W_{xh},$ and $b_{h}$ however depends on $h_{t}$. Therefore, to find the derivatives of the loss with respect to these parameters, we'll have to backpropagate through all the time-steps at once. Hence the name, BPTT.
 
-#### Finding the Derivative of Loss w.r.t. $W_{yh}$
+#### <ins>Finding the Derivative of Loss w.r.t. $W_{yh}$
 Let's find the derivative of the loss with respect to $W_{yh}$.
 
 $\frac{\partial{L}}{\partial{W_{yh}}} = \sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{W_{yh}}} =\sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat{y_{t}}}}{\partial{o_{t}}}.\frac{\partial{o_{t}}}{\partial{W_{yh}}}$
@@ -57,17 +57,17 @@ $\sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat
 
 where $\otimes$ is an outer product.
 
-#### Finding the Derivative of Loss w.r.t. $b_y$
+#### <ins>Finding the Derivative of Loss w.r.t. $b_y$
 
 Similarly, $\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}\frac{\partial{L}}{\partial{\hat{y}_t}}.\frac{\partial{\hat{y}_{t}}}{o_t}.\frac{\partial{o_t}}{\partial{b_y}}$
 
 Since $o_t = h_{t}W_{yh} + b_y$, $\frac{\partial{o_t}}{\partial{b_y}} = 1$. Therefore,
 
-```math
 $\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}(\hat{y}_t - y_t)$
-```
 
-#### Finding the Derivative of Loss w.r.t. $W_{hh}$
+#### <ins>Finding the Derivative of Loss w.r.t. $W_{hh}$
+
+
 
 
 
