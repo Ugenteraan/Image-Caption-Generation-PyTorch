@@ -81,14 +81,39 @@ In the above equation, we're backpropagating from $t+1$ timestep to $t$ timestep
 
 $\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \sum^{t+1}_{k=1}\frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{h_{k}}}.{\frac{\partial{h_k}}{\partial{W_{hh}}}}$
 
+This means that at every timestep, the backpropagation has to be done until the first timestep. E.g. At timestep 3, the backpropagation is done from timestep 3 to timestep 1. At timestep 4, the backpropagation is done from timestep 4 to 1 and so on. In the end, all of these individual derivatives will be summed up. That's the meaning of the equation above.
+
 However, notice that $\frac{\partial{h_{t+1}}}{\partial{h_{k}}}$ is a chain rule in itself. For example, $\frac{\partial{h_3}}{\partial{h_1}}=\frac{\partial{h_3}}{\partial{h_2}}.\frac{\partial{h_2}}{\partial{h_1}}$. Therefore,
 
 $\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \sum^{t+1}_{k=1}\frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.(\Pi^{t}_{j=k}\frac{\partial{h_{j+1}}}{\partial{h_{k}}}).{\frac{\partial{h_k}}{\partial{W_{hh}}}}$
 
 where
-$\Pi^{t}_{j=k}\frac{\partial{h_{j+1}}}{\partial{h_{k}}} =$
+$\Pi^{t}_{j=k}\frac{\partial{h_{j+1}}}{\partial{h_{k}}} = \frac{\partial{h_{t+1}}}{\partial{h_{k}}} = \frac{\partial{h_{t+1}}}{\partial{h_{t}}}.\frac{\partial{h_{t}}}{\partial{h_{t-1}}}...\frac{\partial{h_{k+1}}}{\partial{h_{k}}}$
+
+Finally, generalizing the derivative across all time-step yields
+
+$\frac{\partial{L}}{\partial{W_{hh}}} = \sum^{T}_{t=1}\sum^{t+1}_{k=1}\frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{h_{k}}}.{\frac{\partial{h_k}}{\partial{W_{hh}}}}$.
+
+where
+
+$\frac{\partial{h_{t+1}}}{\partial{h_{k}}} = \frac{\partial{h_{t+1}}}{\partial{h_{t}}}.\frac{\partial{h_{t}}}{\partial{h_{t-1}}}...\frac{\partial{h_{k+1}}}{\partial{h_{k}}}$
+
+#### <ins>Finding the Derivative of Loss w.r.t. $W_{xh}$ 
+
+$\frac{\partial{L_{t+1}}}{\partial{W_{xh}}} = \frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{W_{xh}}}$
+
+Again, using the same logic as before, 
+
+$\frac{\partial{L}}{\partial{W_{xh}}} = \sum^{T}_{t=1}\sum^{t+1}_{k=1}\frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{h_{k}}}.{\frac{\partial{h_k}}{\partial{W_{xh}}}}$.
+
+where
+
+$\frac{\partial{h_{t+1}}}{\partial{h_{k}}} = \frac{\partial{h_{t+1}}}{\partial{h_{t}}}.\frac{\partial{h_{t}}}{\partial{h_{t-1}}}...\frac{\partial{h_{k+1}}}{\partial{h_{k}}}$
 
 
+## References
+
+[https://mmuratarat.github.io/2019-02-07/bptt-of-rnn](https://mmuratarat.github.io/2019-02-07/bptt-of-rnn)
 
 
 
