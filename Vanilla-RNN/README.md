@@ -67,10 +67,26 @@ $\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}(\hat{y}_t - y_t)$
 
 #### <ins>Finding the Derivative of Loss w.r.t. $W_{hh}$
 
+Let's look at the derivative at time step $t+1$.
 
+$\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{W_{hh}}}$
 
+**Note**: We skipped $\partial{o_t}$ because $o_t=h_{t}W_{yh}+b_y$ does not contain $W_{hh}$.
 
+Since $h_{t+1}=tanh(X_{t}W_{xh} + h_{t}W_{hh} + b_h)$, it is clear to see that $h_{t+1}$ depends on $h_{t}$, $h_{t}$ depends on $h_{t-1}$ and so on. Each of these $h_t$ has $W_{hh}$ associated to them. Therefore,
 
+$\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{h_{t}}}.{\frac{\partial{h_t}}{\partial{W_{hh}}}}$
+
+In the above equation, we're backpropagating from $t+1$ timestep to $t$ timestep. If we were to backpropagate all the way to the first timestep,
+
+$\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \sum^{t+1}_{k=1}\frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{h_{k}}}.{\frac{\partial{h_k}}{\partial{W_{hh}}}}$
+
+However, notice that $\frac{\partial{h_{t+1}}}{\partial{h_{k}}}$ is a chain rule in itself. For example, $\frac{\partial{h_3}}{\partial{h_1}}=\frac{\partial{h_3}}{\partial{h_2}}.\frac{\partial{h_2}}{\partial{h_1}}$. Therefore,
+
+$\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \sum^{t+1}_{k=1}\frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.(\Pi^{t}_{j=k}\frac{\partial{h_{j+1}}}{\partial{h_{k}}}).{\frac{\partial{h_k}}{\partial{W_{hh}}}}$
+
+where
+$\Pi^{t}_{j=k}\frac{\partial{h_{j+1}}}{\partial{h_{k}}} =$
 
 
 
