@@ -23,12 +23,9 @@ We can ignore the 4th type as it's just a basic neural network (MLP).
 
 $W_{hh}, W_{xh}, W_{yh}, b_{h},$ and $b_{y}$ are all shared across the time-steps. With that, we can define:
 
-```math
-h_{t} = tanh(X_{t}W_{xh} + h_{t-1}W_{hh} + b_{h})
-```
-```math
-\hat{y}_{t} = softmax(h_tW_{yh} + b_y)
-```
+$h_{t} = tanh(X_{t}W_{xh} + h_{t-1}W_{hh} + b_{h})$
+$\hat{y}_{t} = softmax(h_tW_{yh} + b_y)$
+
 
 Note that the activation functions can be replaced with any other functions depending on the use-case.
 
@@ -48,6 +45,32 @@ In order to find the derivatives of the loss with respect to the weights and bia
 
  - $W_{yh}$ and $b_y$ does not depend on $h_t$. Therefore we can find the derivative of the loss with respect to $W_{yh}$ and $b_y$ at each time-step separately and sum the derivatives.
  - $W_{hh}, W_{xh},$ and $b_{h}$ however depends on $h_{t}$. Therefore, to find the derivatives of the loss with respect to these parameters, we'll have to backpropagate through all the time-steps at once. Hence the name, BPTT.
+
+#### Finding the Derivative of Loss w.r.t. $W_{yh}$
+Let's find the derivative of the loss with respect to $W_{yh}$.
+
+$\frac{\partial{L}}{\partial{W_{yh}}} = \sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{W_{yh}}} =\sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat{y_{t}}}}{\partial{o_{t}}}.\frac{\partial{o_{t}}}{\partial{W_{yh}}}$
+
+Since the derivative of cross-entropy with respect to softmax function is $\hat{y}_{t} - y_{t}$ and $\frac{\partial{o_{t}}}{\partial{W_{yh}}} = h_t$,
+
+$\sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat{y_{t}}}}{\partial{o_{t}}}.\frac{\partial{o_{t}}}{\partial{W_{yh}}} = \sum^{T}_{t=1}(\hat{y}_{t} - y_{t}) \otimes h_t{}$
+
+where $\otimes$ is an outer product.
+
+#### Finding the Derivative of Loss w.r.t. $b_y$
+
+Similarly, $\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}\frac{\partial{L}}{\partial{\hat{y}_t}}.\frac{\partial{\hat{y}_{t}}}{o_t}.\frac{\partial{o_t}}{\partial{b_y}}$
+
+Since $o_t = h_{t}W_{yh} + b_y$, $\frac{\partial{o_t}}{\partial{b_y}} = 1$. Therefore,
+
+$\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}(\hat{y}_t - y_t)$
+
+#### Finding the Derivative of Loss w.r.t. $W_{hh}$
+
+
+
+
+
 
 
 
