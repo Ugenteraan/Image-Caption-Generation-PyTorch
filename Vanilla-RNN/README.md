@@ -25,6 +25,8 @@ $W_{hh}, W_{xh}, W_{yh}, b_{h},$ and $b_{y}$ are all shared across the time-step
 
 ```math
 h_{t} = tanh(X_{t}W_{xh} + h_{t-1}W_{hh} + b_{h})
+```
+```math
 \hat{y}_{t} = softmax(h_tW_{yh} + b_y)
 ```
 
