@@ -60,7 +60,16 @@ Let's find the derivative of the loss with respect to $W_{yh}$.
 \frac{\partial{L}}{\partial{W_{yh}}} = \sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{W_{yh}}} =\sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat{y_{t}}}}{\partial{o_{t}}}.\frac{\partial{o_{t}}}{\partial{W_{yh}}}
 ```
 
-Since the derivative of cross-entropy with respect to softmax function is $\hat{y}_{t} - y_{t}$ and $\frac{\partial{o_{t}}}{\partial{W_{yh}}} = h_t$,
+Since the derivative of cross-entropy with respect to softmax function is 
+
+```math
+\hat{y}_{t} - y_{t}
+``` 
+and 
+ 
+```math
+\frac{\partial{o_{t}}}{\partial{W_{yh}}} = h_t
+```
 
 ```math
 \sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat{y_{t}}}}{\partial{o_{t}}}.\frac{\partial{o_{t}}}{\partial{W_{yh}}} = \sum^{T}_{t=1}(\hat{y}_{t} - y_{t}) \otimes h_t{}
