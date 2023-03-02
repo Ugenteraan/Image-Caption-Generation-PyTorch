@@ -97,11 +97,17 @@ Let's look at the derivative at time step $t+1$.
 
 Since 
 
-$h_{t+1}=tanh(X_{t}W_{xh} + h_{t}W_{hh} + b_h), it is clear to see that $h_{t+1}$ depends on $h_{t}$, $h_{t}$ depends on $h_{t-1}$ and so on. Each of these $h_t$ has $W_{hh}$ associated to them. Therefore,
-
+```math
+h_{t+1}=tanh(X_{t}W_{xh} + h_{t}W_{hh} + b_h), 
+```
  
+it is clear to see that $h_{t+1}$ depends on $h_{t}$, $h_{t}$ depends on $h_{t-1}$ and so on. Each of these $h_t$ has $W_{hh}$ associated to them.
 
-$\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{h_{t}}}.{\frac{\partial{h_t}}{\partial{W_{hh}}}}$
+Therefore,
+
+```math 
+\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{h_{t}}}.{\frac{\partial{h_t}}{\partial{W_{hh}}}}
+```
 
 In the above equation, we're backpropagating from $t+1$ timestep to $t$ timestep. If we were to backpropagate all the way to the first timestep,
 
