@@ -69,6 +69,7 @@ where $\otimes$ is an outer product.
 #### <ins>Finding the Derivative of Loss w.r.t. $b_y$
 
 Similarly, 
+
 ```math
 \frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}\frac{\partial{L}}{\partial{\partial{\hat{y}_t}}}.\frac{\partial{\hat{y}_{t}}}{o_t}.\frac{\partial{o_t}}{\partial{b_y}}
 ```
@@ -97,7 +98,7 @@ Let's look at the derivative at time step $t+1$.
 Since 
 
 ```math
-h_{t+1}=tanh(X_{t}W_{xh} + h_{t}W_{hh} + b_h), it is clear to see that $h_{t+1}$ depends on $h_{t}$, $h_{t}$ depends on $h_{t-1}$ and so on. Each of these $h_t$ has $W_{hh}$ associated to them. Therefore,
+$h_{t+1}=tanh(X_{t}W_{xh} + h_{t}W_{hh} + b_h), it is clear to see that $h_{t+1}$ depends on $h_{t}$, $h_{t}$ depends on $h_{t-1}$ and so on. Each of these $h_t$ has $W_{hh}$ associated to them. Therefore,
 ```
  
 
