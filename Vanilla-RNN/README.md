@@ -70,18 +70,27 @@ where $\otimes$ is an outer product.
 
 Similarly, 
 ```math
-\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}\frac{\partial{L}}{\partial{\hat{y}_t}}.\frac{\partial{\hat{y}_{t}}}{o_t}.\frac{\partial{o_t}}{\partial{b_y}}
+\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}\frac{\partial{L}}{\partial{\partial{\hat{y}_t}}}.\frac{\partial{\hat{y}_{t}}}{o_t}.\frac{\partial{o_t}}{\partial{b_y}}
 ```
 
-Since $o_t = h_{t}W_{yh} + b_y$, $\frac{\partial{o_t}}{\partial{b_y}} = 1$. Therefore,
+Since 
 
-$\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}(\hat{y}_t - y_t)$
+```math
+o_t = h_{t}W_{yh} + b_y$, $\frac{\partial{o_t}}{\partial{b_y}} = 1. 
+```
+Therefore,
+
+```math
+\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}(\hat{y}_t - y_t)
+```
 
 #### <ins>Finding the Derivative of Loss w.r.t. $W_{hh}$
 
 Let's look at the derivative at time step $t+1$.
 
-$\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{W_{hh}}}$
+```math
+\frac{\partial{L_{t+1}}}{\partial{W_{hh}}} = \frac{\partial{L_{t+1}}}{\partial{\hat{y}_{t+1}}}.\frac{\partial{\hat{y}_{t+1}}}{\partial{h_{t+1}}}.\frac{\partial{h_{t+1}}}{\partial{W_{hh}}}
+```
 
 **Note**: We skipped $\partial{o_t}$ because $o_t=h_{t}W_{yh}+b_y$ does not contain $W_{hh}$.
 
