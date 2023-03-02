@@ -54,17 +54,23 @@ In order to find the derivatives of the loss with respect to the weights and bia
 #### <ins>Finding the Derivative of Loss w.r.t. $W_{yh}$
 Let's find the derivative of the loss with respect to $W_{yh}$.
 
-$\frac{\partial{L}}{\partial{W_{yh}}} = \sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{W_{yh}}} =\sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat{y_{t}}}}{\partial{o_{t}}}.\frac{\partial{o_{t}}}{\partial{W_{yh}}}$
+```math
+\frac{\partial{L}}{\partial{W_{yh}}} = \sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{W_{yh}}} =\sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat{y_{t}}}}{\partial{o_{t}}}.\frac{\partial{o_{t}}}{\partial{W_{yh}}}
+```
 
 Since the derivative of cross-entropy with respect to softmax function is $\hat{y}_{t} - y_{t}$ and $\frac{\partial{o_{t}}}{\partial{W_{yh}}} = h_t$,
 
-$\sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat{y_{t}}}}{\partial{o_{t}}}.\frac{\partial{o_{t}}}{\partial{W_{yh}}} = \sum^{T}_{t=1}(\hat{y}_{t} - y_{t}) \otimes h_t{}$
+```math
+\sum^{T}_{t=1}\frac{\partial{L_{t}}}{\partial{\hat{y}_{t}}}.\frac{\partial{\hat{y_{t}}}}{\partial{o_{t}}}.\frac{\partial{o_{t}}}{\partial{W_{yh}}} = \sum^{T}_{t=1}(\hat{y}_{t} - y_{t}) \otimes h_t{}
+```
 
 where $\otimes$ is an outer product.
 
 #### <ins>Finding the Derivative of Loss w.r.t. $b_y$
 
+```math
 Similarly, $\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}\frac{\partial{L}}{\partial{\hat{y}_t}}.\frac{\partial{\hat{y}_{t}}}{o_t}.\frac{\partial{o_t}}{\partial{b_y}}$
+```
 
 Since $o_t = h_{t}W_{yh} + b_y$, $\frac{\partial{o_t}}{\partial{b_y}} = 1$. Therefore,
 
