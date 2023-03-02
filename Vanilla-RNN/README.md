@@ -24,7 +24,7 @@ We can ignore the 4th type as it's just a basic neural network (MLP).
 $W_{hh}, W_{xh}, W_{yh}, b_{h},$ and $b_{y}$ are all shared across the time-steps. With that, we can define:
 
 $h_{t} = tanh(X_{t}W_{xh} + h_{t-1}W_{hh} + b_{h})$
-$$\hat{y}_{t} = softmax(h_tW_{yh} + b_y)$$
+$\hat{y}_{t} = softmax(h_tW_{yh} + b_y)$
 
 
 Note that the activation functions can be replaced with any other functions depending on the use-case.
