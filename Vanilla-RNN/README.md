@@ -23,9 +23,10 @@ We can ignore the 4th type as it's just a basic neural network (MLP).
 
 $W_{hh}, W_{xh}, W_{yh}, b_{h},$ and $b_{y}$ are all shared across the time-steps. With that, we can define:
 
-$h_{t} = tanh(X_{t}W_{xh} + h_{t-1}W_{hh} + b_{h})$
-$\hat{y}_{t} = softmax(h_tW_{yh} + b_y)$
-
+```math
+h_{t} = tanh(X_{t}W_{xh} + h_{t-1}W_{hh} + b_{h})
+\hat{y}_{t} = softmax(h_tW_{yh} + b_y)
+```
 
 Note that the activation functions can be replaced with any other functions depending on the use-case.
 
@@ -35,11 +36,15 @@ The forward-propagation part of the network is quite straightforward. However, t
 
 Let's define the loss function, $L$ first.
 
-$L(\hat{y}, y) = \sum^{T}_{t=1} L_{t}(\hat{y}_{t}, y_{t})$ 
+```math
+L(\hat{y}, y) = \sum^{T}_{t=1} L_{t}(\hat{y}_{t}, y_{t})
+```
 
 Since this type of RNN has many outputs, the total loss is a sum of loss at each time-step. For this example, let's use cross-entropy loss.
 
-$L(\hat{y}, y) = -\sum^{T}_{t=1}y_t\  log\ \hat{y}_{t}$. 
+```math
+L(\hat{y}, y) = -\sum^{T}_{t=1}y_t\  log\ \hat{y}_{t}.
+```
 
 In order to find the derivatives of the loss with respect to the weights and biases, we first need to understand that
 
