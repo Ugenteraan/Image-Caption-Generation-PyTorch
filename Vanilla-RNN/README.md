@@ -63,7 +63,9 @@ Similarly, $\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}\frac{\partial{L}}
 
 Since $o_t = h_{t}W_{yh} + b_y$, $\frac{\partial{o_t}}{\partial{b_y}} = 1$. Therefore,
 
+```math
 $\frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}(\hat{y}_t - y_t)$
+```
 
 #### Finding the Derivative of Loss w.r.t. $W_{hh}$
 
