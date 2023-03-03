@@ -85,15 +85,8 @@ Similarly,
 \frac{\partial{L}}{\partial{b_y}} = \sum^{T}_{t=1}\frac{\partial{L}}{\partial{\partial{\hat{y}_t}}}.\frac{\partial{\hat{y}_{t}}}{o_t}.\frac{\partial{o_t}}{\partial{b_y}}
 ```
 
-Since 
-
-```math
-o_t = h_{t}W_{yh} + b_y
-```
-and
-```math
-\frac{\partial{o_t}}{\partial{b_y}} = 1,
-```
+Since  $o_t = h_{t}W_{yh} + b_y$ and $\frac{\partial{o_t}}{\partial{b_y}} = 1$,
+ 
 Therefore,
 
 ```math
