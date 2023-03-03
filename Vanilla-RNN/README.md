@@ -90,7 +90,9 @@ Since
 ```math
 o_t = h_{t}W_{yh} + b_y
 '''
+
 and
+
 '''math
 \frac{\partial{o_t}}{\partial{b_y}} = 1,
 ```
