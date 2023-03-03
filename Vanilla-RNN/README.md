@@ -88,7 +88,7 @@ Similarly,
 Since 
 
 ```math
-o_t = h_{t}W_{yh} + b_y$, $\frac{\partial{o_t}}{\partial{b_y}} = 1,
+o_t = h_{t}W_{yh} + b_y, \frac{\partial{o_t}}{\partial{b_y}} = 1,
 ```
 Therefore,
 
