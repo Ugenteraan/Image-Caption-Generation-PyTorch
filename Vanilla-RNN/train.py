@@ -2,6 +2,9 @@
 '''
 
 
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from tqdm import tqdm
 import torch
 from torch.utils.data import DataLoader
@@ -17,10 +20,10 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else 'cpu')
 
     train_dataset = VizWiz(mode='train')
-    test_dataset = VizWiz(mode='test')
+    # test_dataset = VizWiz(mode='test')
 
     train_generator = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=4)
-    test_generator = DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=4)
+    # test_generator = DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=4)
 
 
     #30522 is the size of the vocab set of BERT.
