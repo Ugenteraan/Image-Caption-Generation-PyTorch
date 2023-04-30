@@ -43,6 +43,7 @@ def main():
 
             batch_image_feature, batch_caption_embedding, batch_tokens = sample
 
+            print(batch_tokens)
             batch_tokens_target = batch_tokens.reshape(-1)
             length = batch_tokens_target.size()[0]
 
