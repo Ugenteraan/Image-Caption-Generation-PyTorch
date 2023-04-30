@@ -43,25 +43,33 @@ def main():
 
             batch_image_feature, batch_caption_embedding, batch_tokens = sample
 
-            print(batch_tokens)
+
             batch_tokens_target = batch_tokens.reshape(-1)
             length = batch_tokens_target.size()[0]
 
             output_t, hidden_state_t = None, batch_image_feature
 
-            sum_loss = 0
-
+            sum_loss = None
+            optimizer.zero_grad()
             for seq_idx in range(length):
 
                 first_run = True if seq_idx == 0 else False
 
                 batch_caption_embedding_t = batch_caption_embedding[seq_idx] #current caption embedding vector.
                 batch_token_target_t = batch_tokens_target[seq_idx] #current token integer.
-                batch_token_target_t_one_hot = one_hot(batch_token_target_t, num_classes=30522)
+                batch_token_target_t_one_hot = one_hot(batch_token_target_t, num_classes=30522).unsqueeze(0).float()
 
-                output_t, hidden_state_t = vanilla_rnn_model(batch_caption_embedding, batch_image_feature, batch_token_target_t_one_hot)
+                output_t, hidden_state_t = vanilla_rnn_model(batch_caption_embedding_t, hidden_state_t, first_run)
 
-                print(output_t)
+                loss_t = criterion(input=output_t, target=batch_token_target_t_one_hot)
+                if sum_loss == None:
+                    sum_loss = loss_t
+                else:
+                    sum_loss += loss_t
+
+            sum_loss.backward()
+            optimizer.step()
+            print(sum_loss)
 
 
 
