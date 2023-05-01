@@ -79,15 +79,10 @@ def main():
         print(f"Loss on epoch {epoch_idx} is {epoch_loss}")
 
 
-   vanilla_rnn_model.eval()
+    vanilla_rnn_model.eval()
 
-   dummy_input_caption_embedding = torch.randn(1, 3072)
-   dummy_input_image_feature = torch.randn(1, 49152)
-
-   dummy_output,hidden_state = vanilla_rnn_model(dummy_input_caption_embedding, dummy_input_image_feature)
-
-   torch.onnx.export(vanilla_rnn_model, args=(dummy_input_caption_embedding, dummy_input_image_feature),
-                        f='vanilla_rnn.onnx', input_names=['caption_input', 'image_feature_input'], output_names=['word', 'hidden_state'])
+clear
+           f='vanilla_rnn.onnx', input_names=['caption_input', 'image_feature_input'], output_names=['word', 'hidden_state'])
 
 
 if __name__ == '__main__':
