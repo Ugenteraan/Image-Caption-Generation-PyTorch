@@ -32,16 +32,16 @@ def main():
 
     criterion = torch.nn.CrossEntropyLoss()
     vanilla_rnn_model = vanilla_rnn_model.to(device)
-    summary(vanilla_rnn_model, (49152, 2048, 3072, 3072))
+#    summary(vanilla_rnn_model, (1, 3072, 2048))
 
     for epoch_idx in range(1000):
 
 
         vanilla_rnn_model.train()
-
+        epoch_loss = 0
         for idx, sample in tqdm(enumerate(train_generator)):
 
-            batch_image_feature, batch_caption_embedding, batch_tokens = sample
+            batch_image_feature, batch_caption_embedding, batch_tokens = sample['image_fv'].to(device), sample['caption_embedding'], sample['tokens_target']
 
 
             batch_tokens_target = batch_tokens.reshape(-1)
@@ -55,9 +55,9 @@ def main():
 
                 first_run = True if seq_idx == 0 else False
 
-                batch_caption_embedding_t = batch_caption_embedding[seq_idx] #current caption embedding vector.
+                batch_caption_embedding_t = batch_caption_embedding[seq_idx].to(device) #current caption embedding vector.
                 batch_token_target_t = batch_tokens_target[seq_idx] #current token integer.
-                batch_token_target_t_one_hot = one_hot(batch_token_target_t, num_classes=30522).unsqueeze(0).float()
+                batch_token_target_t_one_hot = one_hot(batch_token_target_t, num_classes=30522).unsqueeze(0).float().to(device)
 
                 output_t, hidden_state_t = vanilla_rnn_model(batch_caption_embedding_t, hidden_state_t, first_run)
 
@@ -69,7 +69,9 @@ def main():
 
             sum_loss.backward()
             optimizer.step()
-            print(sum_loss)
+            epoch_loss += sum_loss.item()
+        print(f"Loss on epoch {epoch_idx} is {epoch_loss}")
+
 
 
 
