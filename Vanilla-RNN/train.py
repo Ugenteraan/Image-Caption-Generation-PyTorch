@@ -41,7 +41,7 @@ def main():
         epoch_loss = 0
         for idx, sample in tqdm(enumerate(train_generator)):
 
-            if idx == 5000:
+            if idx == 100:
                 break
             batch_image_feature, batch_caption_embedding, batch_tokens = sample['image_fv'].to(device), sample['caption_embedding'], sample['tokens_target']
 
@@ -81,8 +81,15 @@ def main():
 
     vanilla_rnn_model.eval()
 
-clear
-           f='vanilla_rnn.onnx', input_names=['caption_input', 'image_feature_input'], output_names=['word', 'hidden_state'])
+    dummy_input_caption_embedding = torch.randn(1, 3072)
+    dummy_input_image_feature = torch.randn(1, 49152)
+
+    dummy_output,hidden_state = vanilla_rnn_model(dummy_input_caption_embedding, dummy_input_image_feature)
+
+    torch.onnx.export(vanilla_rnn_model,
+                        args=(dummy_input_caption_embedding, dummy_input_image_feature),
+                        f='vanilla_rnn.onnx', input_names=['caption_input', 'image_feature_input'],
+                        output_names=['word', 'hidden_state'])
 
 
 if __name__ == '__main__':
