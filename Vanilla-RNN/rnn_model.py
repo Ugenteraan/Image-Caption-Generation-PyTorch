@@ -21,19 +21,21 @@ class VanillaRNN(nn.Module):
         self.W_hh = nn.Linear(hidden_layer_size, hidden_layer_size)
         self.W_hy = nn.Linear(hidden_layer_size, output_layer_size)
 
+        self.hidden_layer_size = hidden_layer_size
+
 
         self.tanh = nn.Tanh()
         self.softmax = nn.Softmax(dim=1)
 
 
-    def forward(self, x, prev_hidden_state, first_run=False):
+    def forward(self, x, prev_hidden_state):
         '''Forward Propagation.
         '''
 
         input_to_hidden = self.W_xh(x)
 
         curr_hidden_state = None
-        if first_run:
+        if prev_hidden_state.size() != self.hidden_layer_size:
             curr_hidden_state = self.tanh(input_to_hidden + self.W_h1(prev_hidden_state))
         else:
             curr_hidden_state = self.tanh(input_to_hidden + self.W_hh(prev_hidden_state))

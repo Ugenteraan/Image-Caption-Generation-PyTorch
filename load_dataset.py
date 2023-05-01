@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
     x = VizWiz()
     train_generator = DataLoader(x, batch_size=1, shuffle=True, num_workers=1)
-
+    print("Length: " , train_generator.__len__())
     for i, sample in enumerate(train_generator):
         print("sample", sample['image_fv'].size(), len(sample['caption_embedding']), sample['caption_embedding'][0].size(), sample['tokens_target'], sample['tokens_target'].size())
         pass

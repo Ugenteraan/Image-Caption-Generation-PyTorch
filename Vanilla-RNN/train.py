@@ -22,7 +22,7 @@ def main():
     train_dataset = VizWiz(mode='train')
     # test_dataset = VizWiz(mode='test')
 
-    train_generator = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=4)
+    train_generator = DataLoader(train_dataset, batch_size=1, shuffle=False, num_workers=4)
     # test_generator = DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=4)
 
 
@@ -34,13 +34,15 @@ def main():
     vanilla_rnn_model = vanilla_rnn_model.to(device)
 #    summary(vanilla_rnn_model, (1, 3072, 2048))
 
-    for epoch_idx in range(1000):
+    for epoch_idx in range(5):
 
 
         vanilla_rnn_model.train()
         epoch_loss = 0
         for idx, sample in tqdm(enumerate(train_generator)):
 
+            if idx == 5000:
+                break
             batch_image_feature, batch_caption_embedding, batch_tokens = sample['image_fv'].to(device), sample['caption_embedding'], sample['tokens_target']
 
 
@@ -49,30 +51,43 @@ def main():
 
             output_t, hidden_state_t = None, batch_image_feature
 
-            sum_loss = None
+            output_sequences = None
             optimizer.zero_grad()
             for seq_idx in range(length):
 
-                first_run = True if seq_idx == 0 else False
-
                 batch_caption_embedding_t = batch_caption_embedding[seq_idx].to(device) #current caption embedding vector.
                 batch_token_target_t = batch_tokens_target[seq_idx] #current token integer.
-                batch_token_target_t_one_hot = one_hot(batch_token_target_t, num_classes=30522).unsqueeze(0).float().to(device)
+                # batch_token_target_t_one_hot = one_hot(batch_token_target_t, num_classes=30522).unsqueeze(0).float().to(device)
 
-                output_t, hidden_state_t = vanilla_rnn_model(batch_caption_embedding_t, hidden_state_t, first_run)
+                output_t, hidden_state_t = vanilla_rnn_model(batch_caption_embedding_t, hidden_state_t)
 
-                loss_t = criterion(input=output_t, target=batch_token_target_t_one_hot)
-                if sum_loss == None:
-                    sum_loss = loss_t
+                if output_sequences == None:
+                    output_sequences = output_t.reshape(1, -1)
                 else:
-                    sum_loss += loss_t
+                    output_sequences = torch.concat([output_sequences, output_t.reshape(1, -1)], dim=0)
 
-            sum_loss.backward()
+
+            batch_token_target_t_one_hot = one_hot(batch_tokens_target, num_classes=30522).float().to(device)
+            # print(output_sequences, batch_token_target_t_one_hot)
+            # print(output_sequences.size(), batch_token_target_t_one_hot.size())
+            sample_loss = criterion(input=output_sequences, target=batch_token_target_t_one_hot)
+
+            # print(sample_loss, sample_loss.size())
+            sample_loss.backward()
             optimizer.step()
-            epoch_loss += sum_loss.item()
+            epoch_loss += sample_loss.item()
         print(f"Loss on epoch {epoch_idx} is {epoch_loss}")
 
 
+   vanilla_rnn_model.eval()
+
+   dummy_input_caption_embedding = torch.randn(1, 3072)
+   dummy_input_image_feature = torch.randn(1, 49152)
+
+   dummy_output,hidden_state = vanilla_rnn_model(dummy_input_caption_embedding, dummy_input_image_feature)
+
+   torch.onnx.export(vanilla_rnn_model, args=(dummy_input_caption_embedding, dummy_input_image_feature),
+                        f='vanilla_rnn.onnx', input_names=['caption_input', 'image_feature_input'], output_names=['word', 'hidden_state'])
 
 
 if __name__ == '__main__':
