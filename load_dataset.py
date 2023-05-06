@@ -103,11 +103,9 @@ class VizWiz(Dataset):
 
 
 
-
-
         return {
             'image_fv': img_feature_vector,
-            'caption_embedding': token_vecs_last_four_concat,
+            'caption_embedding': torch.stack(token_vecs_last_four_concat),
             'tokens_target': torch.squeeze(tokens_tensor, dim=0)
         }
 

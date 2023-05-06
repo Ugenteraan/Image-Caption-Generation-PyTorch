@@ -35,7 +35,7 @@ class VanillaRNN(nn.Module):
         input_to_hidden = self.W_xh(x)
 
         curr_hidden_state = None
-        if prev_hidden_state.reshape(-1).size()[0] != self.hidden_layer_size:
+        if prev_hidden_state.size()[1] != self.hidden_layer_size:
             curr_hidden_state = self.tanh(input_to_hidden + self.W_h1(prev_hidden_state))
         else:
             curr_hidden_state = self.tanh(input_to_hidden + self.W_hh(prev_hidden_state))

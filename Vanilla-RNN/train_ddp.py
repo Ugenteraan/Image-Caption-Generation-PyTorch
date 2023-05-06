@@ -11,18 +11,26 @@ from torch.utils.data import DataLoader
 from load_dataset import VizWiz
 from rnn_model import VanillaRNN
 from torchsummary import summary
+import torch.distributed as dist
+import torch.multiprocessing as mp
 from torch.optim import Adam
 from torch.nn.functional import one_hot
 import cfg
-import utils
 
-def main():
+
+
+
+def main(gpu, args):
+
+
+    rank = args.rank * args.gpus + gpu
+    world_size = args.gpus * args.nodes
 
 
     train_dataset = VizWiz(mode='train')
     # test_dataset = VizWiz(mode='test')
 
-    train_generator = DataLoader(train_dataset, batch_size=cfg.BATCH_SIZE, shuffle=cfg.SHUFFLE, num_workers=cfg.NUM_WORKERS, collate_fn=utils.pad_batch_data)
+    train_generator = DataLoader(train_dataset, batch_size=cfg.BATCH_SIZE, shuffle=cfg.SHUFFLE, num_workers=cfg.NUM_WORKERS)
     # test_generator = DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=4)
 
 
@@ -41,10 +49,11 @@ def main():
         for idx, sample in tqdm(enumerate(train_generator)):
 
 
-            batch_image_feature, batch_caption_embedding, batch_tokens_target = sample['image_fv'].to(cfg.DEVICE), sample['caption_embedding'], sample['tokens_target']
+            batch_image_feature, batch_caption_embedding, batch_tokens = sample['image_fv'].to(cfg.DEVICE), sample['caption_embedding'], sample['tokens_target']
 
 
-            length = batch_tokens_target.size()[1] #length of the sentence
+            batch_tokens_target = batch_tokens.reshape(-1)
+            length = batch_tokens_target.size()[0]
 
             output_t, hidden_state_t = None, batch_image_feature
 
@@ -52,14 +61,15 @@ def main():
             optimizer.zero_grad()
             for seq_idx in range(length):
 
-                batch_caption_embedding_t = batch_caption_embedding[:, seq_idx].to(cfg.DEVICE) #current caption embedding vector.
+                batch_caption_embedding_t = batch_caption_embedding[seq_idx].to(cfg.DEVICE) #current caption embedding vector.
 
                 output_t, hidden_state_t = vanilla_rnn_model(batch_caption_embedding_t, hidden_state_t)
 
                 if output_sequences == None:
-                    output_sequences = output_t.reshape(cfg.BATCH_SIZE, 1, -1)
+                    output_sequences = output_t.reshape(1, -1)
                 else:
-                    output_sequences = torch.concat([output_sequences, output_t.reshape(cfg.BATCH_SIZE, 1, -1)], dim=1)
+                    output_sequences = torch.concat([output_sequences, output_t.reshape(1, -1)], dim=0)
+
 
             batch_token_target_t_one_hot = one_hot(batch_tokens_target, num_classes=cfg.NUM_TOKENS).float().to(cfg.DEVICE)
 

@@ -1,7 +1,7 @@
 import torch
 
 DEVICE=torch.device("cuda:0" if torch.cuda.is_available() else 'cpu')
-BATCH_SIZE=1
+BATCH_SIZE=10
 NUM_TOKENS=30522
 SHUFFLE=False
 NUM_WORKERS=4
