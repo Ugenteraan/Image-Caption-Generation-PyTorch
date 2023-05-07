@@ -43,6 +43,7 @@ def main():
 
             batch_image_feature, batch_caption_embedding, batch_tokens_target = sample['image_fv'].to(cfg.DEVICE), sample['caption_embedding'], sample['tokens_target']
 
+            curr_batch_size = batch_image_feature.size()[0]#we can't use cfg.BATCH_SIZE for everything since the last loop might contain less data due to being indivisible by cfg.BATCH_SIZE
 
             length = batch_tokens_target.size()[1] #length of the sentence
 
@@ -57,9 +58,9 @@ def main():
                 output_t, hidden_state_t = vanilla_rnn_model(batch_caption_embedding_t, hidden_state_t)
 
                 if output_sequences == None:
-                    output_sequences = output_t.reshape(cfg.BATCH_SIZE, 1, -1)
+                    output_sequences = output_t.reshape(curr_batch_size, 1, -1)
                 else:
-                    output_sequences = torch.concat([output_sequences, output_t.reshape(cfg.BATCH_SIZE, 1, -1)], dim=1)
+                    output_sequences = torch.concat([output_sequences, output_t.reshape(curr_batch_size, 1, -1)], dim=1)
 
             batch_token_target_t_one_hot = one_hot(batch_tokens_target, num_classes=cfg.NUM_TOKENS).float().to(cfg.DEVICE)
 
