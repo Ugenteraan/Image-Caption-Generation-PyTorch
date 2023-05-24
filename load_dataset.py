@@ -102,9 +102,6 @@ class VizWiz(Dataset):
                 token_vecs_last_four_concat.append(vecs)
 
 
-
-
-
         return {
             'image_fv': img_feature_vector,
             'caption_embedding': token_vecs_last_four_concat,

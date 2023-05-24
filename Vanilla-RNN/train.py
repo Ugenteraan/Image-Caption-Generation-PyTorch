@@ -50,6 +50,7 @@ def main():
 
             output_sequences = None
             optimizer.zero_grad()
+            
             for seq_idx in range(length):
 
                 batch_caption_embedding_t = batch_caption_embedding[seq_idx].to(cfg.DEVICE) #current caption embedding vector.
