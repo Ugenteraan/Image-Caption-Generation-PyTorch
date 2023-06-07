@@ -3,6 +3,7 @@ dataset
 .DS_Store
 *.pth
 *.onnx
+__MACOSX/**
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

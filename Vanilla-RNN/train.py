@@ -15,8 +15,8 @@ from torch.optim import Adam
 from torch.nn.functional import one_hot
 import cfg
 
-def main():
 
+def main():
 
     train_dataset = VizWiz(mode='train')
     # test_dataset = VizWiz(mode='test')
@@ -50,7 +50,7 @@ def main():
 
             output_sequences = None
             optimizer.zero_grad()
-            
+
             for seq_idx in range(length):
 
                 batch_caption_embedding_t = batch_caption_embedding[seq_idx].to(cfg.DEVICE) #current caption embedding vector.
